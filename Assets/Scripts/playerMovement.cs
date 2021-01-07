@@ -16,7 +16,7 @@ public class playerMovement : MonoBehaviour
     List<GameObject> currRope = new List<GameObject>();
 
     Rigidbody2D body;
-    private float maxVerticalSpeed = 0.05f; // Units per second.
+    private float maxVerticalSpeed = 20f; // Units per second.
     private Camera mainCamera;
     // detects whether 
     GameObject ropeStart = null;
@@ -71,9 +71,9 @@ public class playerMovement : MonoBehaviour
     {
 
         // Bounding the vertical speed.
-        if (body.velocity.y > maxVerticalSpeed)
+        if (body.velocity.y < -maxVerticalSpeed)
         {
-            body.velocity = new Vector2(body.velocity.x, maxVerticalSpeed);
+            body.velocity = new Vector2(body.velocity.x, -maxVerticalSpeed);
         }
     }
 
@@ -102,8 +102,6 @@ public class playerMovement : MonoBehaviour
         Vector3 linkGap = (pos2 - pos1).normalized;
         linkGap *= linkSpace;
         Vector3 newPos = pos1 + linkGap;
-        GameObject newLink = p1;
-        GameObject prevLink = p1;
         int i = 1;
         while ((pos1 - pos2).magnitude >= (pos1 - newPos).magnitude)
         {
@@ -142,11 +140,11 @@ public class playerMovement : MonoBehaviour
         {
             if (currRope.Count > 0)
             {
-                Vector3 boost = (currRope[0].transform.position - currRope[currRope.Count - 1].transform.position);
-                boost = new Vector3(boost.x, boost.y, 0).normalized;
-                boost = (boost.x >= 0) ? Quaternion.Euler(0, 0, -90) * boost : Quaternion.Euler(0, 0, 90) * boost;
-                boost *= 200;
-                body.AddForce(boost);
+                //Vector3 boost = (currRope[0].transform.position - currRope[currRope.Count - 1].transform.position);
+                //boost = new Vector3(boost.x, boost.y, 0).normalized;
+                //boost = (boost.x >= 0) ? Quaternion.Euler(0, 0, -90) * boost : Quaternion.Euler(0, 0, 90) * boost;
+                //boost *= 200;
+                //body.AddForce(boost);
             }
         }
     }
