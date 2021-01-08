@@ -8,18 +8,27 @@ public class GameController : MonoBehaviour
     Camera mainCamera;
     GameObject player;
     public Image sloMoSign;
-    public GameObject linkPrefab;
     public GameObject obstaclePrefab;
-    public GameObject boundaries;
-    private GameObject[] linkPool;
+    public GameObject boundaries; 
     private GameObject[] obstaclesPool;
-    private int currLinkIdx;
     private float frameHeight;
     private float frameWidth;
     private float parallaxObstaclesFactor;
     private float minObstaclesGap;
     private float maxObstaclesGap;
     private float speed;
+
+    // Link Object Pooling:
+    public GameObject linkPrefab;
+    private GameObject[] linkPool;
+    public int linkPoolNum;
+    private int currLinkIdx;
+
+    // Shot Object Pooling:
+    public GameObject shotPrefab;
+    private GameObject[] shotPool;
+    public int shotPoolNum;
+    private int currShotIdx;
 
     private void Awake()
     {
@@ -36,15 +45,26 @@ public class GameController : MonoBehaviour
         minObstaclesGap = 0.5f;
         minObstaclesGap = 2.5f;
         speed = 0.05f;
-        // Initializing the chains.
-        linkPool = new GameObject[50];
-        for (int i = 0; i < 50; i++)
+
+        // Initializing chain links.
+        linkPool = new GameObject[linkPoolNum];
+        for (int i = 0; i < linkPoolNum; i++)
         {
             linkPool[i] = Instantiate(linkPrefab);
             //linkPool[i].transform.parent = this.transform;
             linkPool[i].SetActive(false);
         }
         currLinkIdx = 0;
+
+        // Initializing shots.
+        shotPool = new GameObject[shotPoolNum];
+        for (int i = 0; i < shotPoolNum; i++)
+        {
+            shotPool[i] = Instantiate(shotPrefab);
+            shotPool[i].SetActive(false);
+        }
+        currShotIdx = 0;
+
         // Inintializing the obstacles.
         obstaclesPool = new GameObject[5];
         for (int i = 0; i < 5; i++)
@@ -59,7 +79,7 @@ public class GameController : MonoBehaviour
     {
         GameObject link = linkPool[currLinkIdx];
         currLinkIdx++;
-        if (currLinkIdx > 49)
+        if (currLinkIdx > linkPoolNum - 1)
         {
             currLinkIdx = 0;
         }
@@ -73,6 +93,18 @@ public class GameController : MonoBehaviour
         link.GetComponent<SpringJoint2D>().connectedBody = null;
         link.GetComponent<Collider2D>().enabled = true;
         link.SetActive(false);
+    }
+
+    public GameObject getShot()
+    {
+        GameObject shot = shotPool[currShotIdx];
+        currShotIdx++;
+        if (currShotIdx > shotPoolNum - 1)
+        {
+            currShotIdx = 0;
+        }
+        shot.SetActive(true);
+        return shot;
     }
 
     public void sloMoStart()

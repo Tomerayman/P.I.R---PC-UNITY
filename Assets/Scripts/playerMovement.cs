@@ -9,6 +9,7 @@ public class playerMovement : MonoBehaviour
 
     public GameController manager;
     public float moveForce;
+    public float jumpForce;
     // space needed b.w. rope links:
     public float linkSpace;
     // distance b.w. player and rope to which the rope is then deleted:
@@ -21,7 +22,9 @@ public class playerMovement : MonoBehaviour
     private Camera mainCamera;
     // detects whether 
     GameObject ropeStart = null;
-
+    // detects if player is standing on ground == can jump;
+    bool isOnGround = false;
+    public float distToGround;
 
     // Start is called before the first frame update
     void Start()
@@ -61,6 +64,14 @@ public class playerMovement : MonoBehaviour
         }
     }
 
+    public void jump()
+    {
+        if (isOnGround)
+        {
+            body.AddForce(Vector3.up * jumpForce * 100);
+        }
+    }
+
     public void shoot()
     {
         Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
@@ -85,7 +96,15 @@ public class playerMovement : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.tag == "Rope")
+        if (collision.collider.tag == "Platform")
+        {
+            if (Physics2D.Raycast(transform.position, -Vector2.up, distToGround + 0.1f))
+            {
+                isOnGround = true;
+            }
+        }
+
+            if (collision.collider.tag == "Rope")
         {
             if (currRope.Count > 0)
             {
@@ -100,7 +119,12 @@ public class playerMovement : MonoBehaviour
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.collider.tag == "Rope")
+        if (collision.collider.tag == "Platform")
+        {
+            isOnGround = false;
+        }
+
+            if (collision.collider.tag == "Rope")
         {
             StartCoroutine(waitForRopeRemove(collision.collider.transform.position));
             //if (currRope.Count > 0)

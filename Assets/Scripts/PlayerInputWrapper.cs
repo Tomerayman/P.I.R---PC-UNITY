@@ -32,6 +32,14 @@ public class PlayerInputWrapper : MonoBehaviour
         walkInput = context.ReadValue<float>();
     }
 
+    public void iJump(InputAction.CallbackContext context)
+    {
+        if (context.phase == InputActionPhase.Started)
+        {
+            controller.jump();
+        }
+    }
+
     public void iShoot(InputAction.CallbackContext context)
     {
         if (context.phase == InputActionPhase.Started)
