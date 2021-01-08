@@ -20,23 +20,23 @@ public class CharacterScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            activeMode = (activeMode + 1) % 3;
-            SwitchMode();
-        }
-        if(Input.GetKeyDown(KeyCode.A))
-        {
-            RotateCharacter();
-        }
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            TranslateCharacter();
-        }
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            ScaleCharacter();
-        }
+        //if(Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    activeMode = (activeMode + 1) % 3;
+        //    SwitchMode();
+        //}
+        //if(Input.GetKeyDown(KeyCode.A))
+        //{
+        //    RotateCharacter();
+        //}
+        //if (Input.GetKeyDown(KeyCode.S))
+        //{
+        //    TranslateCharacter();
+        //}
+        //if (Input.GetKeyDown(KeyCode.D))
+        //{
+        //    ScaleCharacter();
+        //}
     }
 
     public void SwitchMode()

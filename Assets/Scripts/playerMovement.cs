@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class playerMovement : MonoBehaviour
@@ -33,47 +34,85 @@ public class playerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Tracking with the camera after the character.
-        mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, transform.position.y - 5, mainCamera.transform.position.z);
-        
-        if (Input.GetKey(KeyCode.D))
-        {
-            body.AddForce(Vector3.right * moveForce);
-        }
-        if (Input.GetKey(KeyCode.A))
-        {
-            body.AddForce(Vector3.left * moveForce);
-        }
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Time.timeScale = 0.15f;
-            manager.sloMoStart();
-        }
-        if (Input.GetKeyUp(KeyCode.Space))
-        {
-            Time.timeScale = 1f;
-            manager.sloMoEnd();
-        }
-        if (Input.GetMouseButtonDown(0))
-        {
-            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-            float distance = transform.position.z - mainCamera.transform.position.z;
-            Vector3 pos = ray.GetPoint(distance);
-            createRopeLink(pos);
-        }
-        if (Input.GetKey(KeyCode.R))
-        {
-            SceneManager.LoadScene("TomerScene");
-        }
     }
+      
+
 
     private void FixedUpdate()
     {
-
+        // Tracking with the camera after the character.
+        mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, transform.position.y - 5, mainCamera.transform.position.z);
         // Bounding the vertical speed.
         if (body.velocity.y < -maxVerticalSpeed)
         {
             body.velocity = new Vector2(body.velocity.x, -maxVerticalSpeed);
+        }
+    }
+
+    public void move(char dir)
+    {
+        if (dir == 'l')
+        {
+            body.AddForce(Vector3.left * moveForce);
+        }
+        else if (dir == 'r')
+        {
+            body.AddForce(Vector3.right * moveForce);
+        }
+    }
+
+    public void shoot()
+    {
+        Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
+        float distance = transform.position.z - mainCamera.transform.position.z;
+        Vector3 pos = ray.GetPoint(distance);
+        createRopeLink(pos);
+    }
+
+    public void slowTime(bool toStart)
+    {
+        if (toStart)
+        {
+            Time.timeScale = 0.15f;
+            manager.sloMoStart();
+        }
+        else
+        {
+            Time.timeScale = 1f;
+            manager.sloMoEnd();
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.tag == "Rope")
+        {
+            if (currRope.Count > 0)
+            {
+                Vector3 boost = (currRope[0].transform.position - currRope[currRope.Count - 1].transform.position);
+                boost = new Vector3(boost.x, boost.y, 0).normalized;
+                boost = (boost.x >= 0) ? Quaternion.Euler(0, 0, -90) * boost : Quaternion.Euler(0, 0, 90) * boost;
+                boost *= 200;
+                body.AddForce(boost);
+            }
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.collider.tag == "Rope")
+        {
+            StartCoroutine(waitForRopeRemove(collision.collider.transform.position));
+            //if (currRope.Count > 0)
+            //{
+            //    Vector3 boost = (currRope[0].transform.position - currRope[currRope.Count - 1].transform.position).normalized;
+            //    Debug.Log(boost);
+            //    boost = (boost.x >= 0) ? Quaternion.Euler(0, 0, -90) * boost : Quaternion.Euler(0, 0, 90) * boost;
+            //    Debug.Log(boost);
+            //    boost *= 300;
+            //    body.AddForce(boost);
+            //}
+            
         }
     }
 
@@ -131,40 +170,6 @@ public class playerMovement : MonoBehaviour
             manager.resetLink(currRope[i]);
         }
         currRope.Clear();
-
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.collider.tag == "Rope")
-        {
-            if (currRope.Count > 0)
-            {
-                //Vector3 boost = (currRope[0].transform.position - currRope[currRope.Count - 1].transform.position);
-                //boost = new Vector3(boost.x, boost.y, 0).normalized;
-                //boost = (boost.x >= 0) ? Quaternion.Euler(0, 0, -90) * boost : Quaternion.Euler(0, 0, 90) * boost;
-                //boost *= 200;
-                //body.AddForce(boost);
-            }
-        }
-    }
-
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        if (collision.collider.tag == "Rope")
-        {
-            StartCoroutine(waitForRopeRemove(collision.collider.transform.position));
-            //if (currRope.Count > 0)
-            //{
-            //    Vector3 boost = (currRope[0].transform.position - currRope[currRope.Count - 1].transform.position).normalized;
-            //    Debug.Log(boost);
-            //    boost = (boost.x >= 0) ? Quaternion.Euler(0, 0, -90) * boost : Quaternion.Euler(0, 0, 90) * boost;
-            //    Debug.Log(boost);
-            //    boost *= 300;
-            //    body.AddForce(boost);
-            //}
-            
-        }
     }
 
 }
