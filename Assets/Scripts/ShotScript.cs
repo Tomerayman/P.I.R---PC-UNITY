@@ -22,6 +22,9 @@ public class ShotScript : MonoBehaviour
     
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        this.gameObject.SetActive(false);
+        if (collision.collider.tag != "Player" || !playerShot)
+        {
+            this.gameObject.SetActive(false);
+        }
     }
 }

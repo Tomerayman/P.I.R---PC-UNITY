@@ -1346,7 +1346,7 @@ GameObject:
   - component: {fileID: 757751070}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1486,10 +1486,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   manager: {fileID: 472301533}
   moveForce: 30
-  jumpForce: 50
+  jumpForce: 25
   linkSpace: 1
   ropeDeleteDistance: 3
   distToGround: 1.05
+  dashSuit: {fileID: 21300000, guid: 25e697394ca3fa845b75018a78285723, type: 3}
+  fireSuit: {fileID: 21300000, guid: 679277075bb980d4f90e85e9e33bc06f, type: 3}
+  shieldSuit: {fileID: 21300000, guid: 7f924d3b69e20c94dbbe460474ff3413, type: 3}
 --- !u!114 &757751069
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1595,6 +1598,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: f6b815ec-0b31-4138-be00-d5f908d44cbd
     m_ActionName: player normal/New action
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 757751070}
+        m_TargetAssemblyTypeName: PlayerInputWrapper, Assembly-CSharp
+        m_MethodName: iChangeMode
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 809798f5-27cb-442f-8323-c34e5387c58a
+    m_ActionName: player normal/ChangeMode[/Keyboard/1,/Keyboard/2,/Keyboard/3]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: PC player
   m_DefaultActionMap: player normal

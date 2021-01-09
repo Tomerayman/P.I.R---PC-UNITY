@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;
 
 public class playerMovement : MonoBehaviour
 {
-
     public GameController manager;
     public float moveForce;
     public float jumpForce;
@@ -16,22 +15,31 @@ public class playerMovement : MonoBehaviour
     public float ropeDeleteDistance;
     // list of currently active rope links:
     List<GameObject> currRope = new List<GameObject>();
-
-    Rigidbody2D body;
-    private float maxVerticalSpeed = 20f; // Units per second.
-    private Camera mainCamera;
-    // detects whether 
-    GameObject ropeStart = null;
     // detects if player is standing on ground == can jump;
     bool isOnGround = false;
     public float distToGround;
+
+    Rigidbody2D body;
+    SpriteRenderer renderer;
+    private Camera mainCamera;
+
+    private float maxVerticalSpeed = 20f; // Units per second.
+    // detects whether there's a first 
+    GameObject ropeStart = null;
+
+    // mode variables:
+    private char currMode;
+    public Sprite dashSuit;
+    public Sprite fireSuit;
+    public Sprite shieldSuit;
 
     // Start is called before the first frame update
     void Start()
     {
         mainCamera = Camera.main;
         body = GetComponent<Rigidbody2D>();
-
+        renderer = GetComponent<SpriteRenderer>();
+        currMode = 'r';
     }
 
     // Update is called once per frame
@@ -77,7 +85,24 @@ public class playerMovement : MonoBehaviour
         Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
         float distance = transform.position.z - mainCamera.transform.position.z;
         Vector3 pos = ray.GetPoint(distance);
-        createRopeLink(pos);
+        if (currMode == 'r')
+        {
+            createRopeLink(pos);
+        }
+        else if (currMode == 'f')
+        {
+            fireShot(pos);
+        }
+        
+    }
+
+    private void fireShot(Vector3 pos)
+    {
+        Vector3 shotDirection = (pos - transform.position).normalized;
+        GameObject shot = manager.getShot();
+        shot.transform.position = transform.position + shotDirection;
+        shot.transform.up = shotDirection;
+        shot.GetComponent<ShotScript>().playerShot = true;
     }
 
     public void slowTime(bool toStart)
@@ -92,6 +117,25 @@ public class playerMovement : MonoBehaviour
             Time.timeScale = 1f;
             manager.sloMoEnd();
         }
+    }
+
+    public void changeMode(char mode)
+    {
+        Sprite modeSuit = null;
+        switch (mode)
+        {
+            case 'r':
+                modeSuit = dashSuit;
+                break;
+            case 'f':
+                modeSuit = fireSuit;
+                break;
+            case 's':
+                modeSuit = shieldSuit;
+                break;
+        }
+        currMode = mode;
+        renderer.sprite = modeSuit;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

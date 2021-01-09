@@ -44,6 +44,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "ChangeMode",
+                    "type": "Button",
+                    "id": "809798f5-27cb-442f-8323-c34e5387c58a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -132,6 +140,61 @@
                     "processors": "",
                     "groups": "PC player",
                     "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "2D Vector",
+                    "id": "1376bdf4-596b-49e1-9542-75897f389daf",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ChangeMode",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "d54f3ad8-7567-415e-bd3a-6c0e041afd0d",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC player",
+                    "action": "ChangeMode",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "77733b6f-e712-4e4f-b752-8f8c891f73bd",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC player",
+                    "action": "ChangeMode",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "307484b2-88a0-48d8-9c71-79f07d188001",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC player",
+                    "action": "ChangeMode",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "70018e60-3747-4f76-a158-b6b6a841930b",
+                    "path": "<Keyboard>/3",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC player",
+                    "action": "ChangeMode",
                     "isComposite": false,
                     "isPartOfComposite": true
                 }

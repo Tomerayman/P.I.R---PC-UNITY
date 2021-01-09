@@ -7,6 +7,9 @@ using UnityEngine.SceneManagement;
 public class PlayerInputWrapper : MonoBehaviour
 {
     playerMovement controller;
+    char ROPE_MODE = 'r';
+    char FIRE_MODE = 'f';
+    char SHIELD_MODE= 's';
 
     float walkInput = 0;
     // Start is called before the first frame update
@@ -57,6 +60,23 @@ public class PlayerInputWrapper : MonoBehaviour
         else if (context.phase == InputActionPhase.Canceled)
         {
             controller.slowTime(false);
+        }
+    }
+
+    public void iChangeMode(InputAction.CallbackContext context)
+    {
+        Vector2 mode = context.ReadValue<Vector2>();
+        if (mode.x == -1)
+        {
+            controller.changeMode(ROPE_MODE);
+        }
+        else if (mode.y == -1)
+        {
+            controller.changeMode(FIRE_MODE);
+        }
+        else if (mode.x == 1)
+        {
+            controller.changeMode(SHIELD_MODE);
         }
     }
 
