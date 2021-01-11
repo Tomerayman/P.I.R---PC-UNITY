@@ -38,6 +38,11 @@ public class PlayerAnimationManager : MonoBehaviour
         animator.SetBool(Animator.StringToHash("onGround"), isGrounded);
     }
 
+    public void takeHit()
+    {
+        animator.SetBool(Animator.StringToHash("takeHit"), true);
+    }
+
     // Update is called once per frame
     void Update()
     {

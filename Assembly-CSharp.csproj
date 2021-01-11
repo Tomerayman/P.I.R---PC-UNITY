@@ -60,13 +60,16 @@
     <Compile Include="Assets\Scripts\GameController.cs" />
     <Compile Include="Assets\Scripts\EnemyRadiationScript.cs" />
     <Compile Include="Assets\StarterParticles\RotateFlareHolder.cs" />
-    <Compile Include="Assets\JumpResetScript.cs" />
+    <Compile Include="Assets\Scripts\JumpResetScript.cs" />
     <Compile Include="Assets\Scripts\PlayerInputWrapper.cs" />
     <Compile Include="Assets\Scripts\playerMovement.cs" />
     <Compile Include="Assets\Scripts\ShotScript.cs" />
     <Compile Include="Assets\Scripts\ParallaxScript.cs" />
     <Compile Include="Assets\Scripts\PlayerAnimationManager.cs" />
     <Compile Include="Assets\Scripts\PlatformElementsScript.cs" />
+    <Compile Include="Assets\Scripts\hitResetScript.cs" />
+    <Compile Include="Assets\Scripts\ShieldController.cs" />
+    <Compile Include="Assets\Scripts\EnemyScript.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\StarterParticles\Helpers\readme.txt" />

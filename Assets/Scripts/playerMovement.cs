@@ -61,7 +61,7 @@ public class playerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         // Tracking with the camera after the character.
-        mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, transform.position.y + 5, mainCamera.transform.position.z);
+        mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, transform.position.y - 5, mainCamera.transform.position.z);
         // Bounding the vertical speed.
         if (body.velocity.y < -maxVerticalSpeed)
         {
@@ -77,13 +77,13 @@ public class playerMovement : MonoBehaviour
     {
         if (dir == 'l')
         {
-            //body.AddForce(Vector3.left * moveForce);
-            body.position += Vector2.left * Time.deltaTime * moveForce;
+            body.AddForce(Vector3.left * moveForce);
+            //body.position += Vector2.left * Time.deltaTime * moveForce;
         }
         else if (dir == 'r')
         {
             body.AddForce(Vector3.right * moveForce);
-            body.position += Vector2.right * Time.deltaTime * moveForce;
+            //body.position += Vector2.right * Time.deltaTime * moveForce;
         }
     }
 
@@ -188,6 +188,20 @@ public class playerMovement : MonoBehaviour
         //renderer.sprite = modeSuit;
     }
 
+    public void takeHit()
+    {
+        animate.takeHit();
+        manager.loseLife();
+    }
+
+    private void OnParticleCollision(GameObject other)
+    {
+        //ParticlePhysicsExtensions.GetCollisionEvents
+        if (other.tag == "EnemyShot")
+        {
+            takeHit();
+        }
+    }
 
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -201,7 +215,7 @@ public class playerMovement : MonoBehaviour
             }
         }
 
-            if (collision.collider.tag == "Rope")
+         else if (collision.collider.tag == "Rope")
         {
             if (currRope.Count > 0)
             {
@@ -212,6 +226,7 @@ public class playerMovement : MonoBehaviour
                 body.AddForce(boost);
             }
         }
+       
     }
 
     private void OnCollisionExit2D(Collision2D collision)
