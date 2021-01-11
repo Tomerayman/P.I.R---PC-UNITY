@@ -8,17 +8,20 @@ public class ParallaxScript : MonoBehaviour
     public GameObject[] backgroundElements;
     private float parallaxFactor = 0.75f;
     private float speed = 0.01f;
-    private float frameHeight;
+    public static float frameHeight;
+    public static float frameWidth;
 
     private void Awake()
     {
         cam = Camera.main.transform;
+        frameHeight = backgroundElements[0].transform.localScale.y;
+        frameWidth = backgroundElements[0].transform.localScale.x;
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        frameHeight = backgroundElements[0].transform.localScale.y;
+        
     }
 
     // Update is called once per frame
