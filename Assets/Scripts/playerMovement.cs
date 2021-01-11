@@ -20,8 +20,14 @@ public class playerMovement : MonoBehaviour
     public float distToGround;
 
     Rigidbody2D body;
-    SpriteRenderer renderer;
     private Camera mainCamera;
+    private GameObject rig;
+    private PlayerAnimationManager animate;
+    
+    // shield vars:
+    private GameObject shield;
+    public bool shieldOn = false;
+
 
     private float maxVerticalSpeed = 20f; // Units per second.
     // detects whether there's a first 
@@ -29,17 +35,20 @@ public class playerMovement : MonoBehaviour
 
     // mode variables:
     private char currMode;
-    public Sprite dashSuit;
-    public Sprite fireSuit;
-    public Sprite shieldSuit;
+    public Material dashSuit;
+    public Material fireSuit;
+    public Material shieldSuit;
 
     // Start is called before the first frame update
     void Start()
     {
         mainCamera = Camera.main;
         body = GetComponent<Rigidbody2D>();
-        renderer = GetComponent<SpriteRenderer>();
+        rig = transform.Find("PlayerRig").gameObject;
+        animate = rig.GetComponent<PlayerAnimationManager>();
         currMode = 'r';
+        shield = transform.Find("Shield").gameObject;
+        stopShield();
     }
 
     // Update is called once per frame
@@ -52,11 +61,15 @@ public class playerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         // Tracking with the camera after the character.
-        mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, transform.position.y - 5, mainCamera.transform.position.z);
+        mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, transform.position.y + 5, mainCamera.transform.position.z);
         // Bounding the vertical speed.
         if (body.velocity.y < -maxVerticalSpeed)
         {
             body.velocity = new Vector2(body.velocity.x, -maxVerticalSpeed);
+        }
+        if (shieldOn)
+        {
+            maintainShield();
         }
     }
 
@@ -64,11 +77,13 @@ public class playerMovement : MonoBehaviour
     {
         if (dir == 'l')
         {
-            body.AddForce(Vector3.left * moveForce);
+            //body.AddForce(Vector3.left * moveForce);
+            body.position += Vector2.left * Time.deltaTime * moveForce;
         }
         else if (dir == 'r')
         {
             body.AddForce(Vector3.right * moveForce);
+            body.position += Vector2.right * Time.deltaTime * moveForce;
         }
     }
 
@@ -77,7 +92,15 @@ public class playerMovement : MonoBehaviour
         if (isOnGround)
         {
             body.AddForce(Vector3.up * jumpForce * 100);
+            animate.jump();
+            animate.setGrounded(false);
         }
+    }
+
+    public void turnLeft(bool isLeft)
+    {
+        if (isLeft) rig.transform.localRotation = Quaternion.Euler(0, -90, 0);
+        else rig.transform.localRotation = Quaternion.Euler(0, 90, 0);
     }
 
     public void shoot()
@@ -93,8 +116,34 @@ public class playerMovement : MonoBehaviour
         {
             fireShot(pos);
         }
+        else if (currMode == 's')
+        {
+            startShield();
+        }
         
     }
+    public void startShield()
+    {
+        shield.SetActive(true);
+        shieldOn = true;
+    }
+
+    private void maintainShield()
+    {
+        Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
+        float distance = transform.position.z - mainCamera.transform.position.z;
+        Vector3 pos = ray.GetPoint(distance);
+        Vector3 shieldDir = (pos - transform.position).normalized;
+        shield.transform.position = transform.position + shieldDir * 1.5f;
+        shield.transform.up = shieldDir;
+    }
+
+    public void stopShield()
+    {
+        shieldOn = false;
+        shield.SetActive(false);
+    }
+
 
     private void fireShot(Vector3 pos)
     {
@@ -121,7 +170,7 @@ public class playerMovement : MonoBehaviour
 
     public void changeMode(char mode)
     {
-        Sprite modeSuit = null;
+        Material modeSuit = null;
         switch (mode)
         {
             case 'r':
@@ -135,8 +184,11 @@ public class playerMovement : MonoBehaviour
                 break;
         }
         currMode = mode;
-        renderer.sprite = modeSuit;
+        rig.transform.Find("PlayerBody").gameObject.GetComponent<SkinnedMeshRenderer>().material = modeSuit;
+        //renderer.sprite = modeSuit;
     }
+
+
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -145,6 +197,7 @@ public class playerMovement : MonoBehaviour
             if (Physics2D.Raycast(transform.position, -Vector2.up, distToGround + 0.1f))
             {
                 isOnGround = true;
+                animate.setGrounded(true);
             }
         }
 
@@ -166,9 +219,10 @@ public class playerMovement : MonoBehaviour
         if (collision.collider.tag == "Platform")
         {
             isOnGround = false;
+            animate.setGrounded(false);
         }
 
-            if (collision.collider.tag == "Rope")
+        if (collision.collider.tag == "Rope")
         {
             StartCoroutine(waitForRopeRemove(collision.collider.transform.position));
             //if (currRope.Count > 0)
@@ -181,6 +235,10 @@ public class playerMovement : MonoBehaviour
             //    body.AddForce(boost);
             //}
             
+        }
+        if (collision.collider.tag == "EnemyShot")
+        {
+            Debug.Log("take Hit");
         }
     }
 

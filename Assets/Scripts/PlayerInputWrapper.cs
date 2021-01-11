@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 public class PlayerInputWrapper : MonoBehaviour
 {
     playerMovement controller;
+    public PlayerAnimationManager animate;
     char ROPE_MODE = 'r';
     char FIRE_MODE = 'f';
     char SHIELD_MODE= 's';
@@ -33,6 +34,15 @@ public class PlayerInputWrapper : MonoBehaviour
     public void iMove(InputAction.CallbackContext context)
     {
         walkInput = context.ReadValue<float>();
+        if (walkInput == -1)
+        {
+            controller.turnLeft(true);
+        }
+        else if (walkInput == 1)
+        {
+            controller.turnLeft(false);
+        }
+        animate.setWalking(walkInput != 0);
     }
 
     public void iJump(InputAction.CallbackContext context)
@@ -48,6 +58,10 @@ public class PlayerInputWrapper : MonoBehaviour
         if (context.phase == InputActionPhase.Started)
         {
             controller.shoot();
+        }
+        if (controller.shieldOn && context.phase == InputActionPhase.Canceled)
+        {
+            controller.stopShield();
         }
     }
 
