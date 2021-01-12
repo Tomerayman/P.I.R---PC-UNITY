@@ -99,7 +99,7 @@ public class PlatformElementsScript : MonoBehaviour
             GameObject barrel = barrels[platformIdx];
             barrel.SetActive(true);
             float barrelPosX = xPos + platforms[platformIdx, size].transform.localScale.x * Random.Range(-0.75f, 0.75f);
-            float BarrelPosY = yPos + platforms[platformIdx, size].transform.lossyScale.y + barrel.transform.localScale.y;
+            float BarrelPosY = yPos + 2 * platforms[platformIdx, size].transform.localScale.y + barrel.transform.localScale.y;
             barrel.transform.position = new Vector3(barrelPosX, BarrelPosY, -1);
         }
         else if (platformType == 2)
