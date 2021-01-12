@@ -30,7 +30,11 @@ public class PlayerAnimationManager : MonoBehaviour
     public void jump()
     {
         animator.SetBool(Animator.StringToHash("jump"), true);
-        //animator.SetBool(Animator.StringToHash("jump"), false);
+    }
+
+    public void takeHit()
+    {
+        animator.SetBool(Animator.StringToHash("takeHit"), true);
     }
 
     public void setGrounded(bool isGrounded)

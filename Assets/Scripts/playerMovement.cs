@@ -61,7 +61,7 @@ public class playerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         // Tracking with the camera after the character.
-        mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, transform.position.y + 5, mainCamera.transform.position.z);
+        mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, transform.position.y - 5, mainCamera.transform.position.z);
         // Bounding the vertical speed.
         if (body.velocity.y < -maxVerticalSpeed)
         {
@@ -77,13 +77,11 @@ public class playerMovement : MonoBehaviour
     {
         if (dir == 'l')
         {
-            //body.AddForce(Vector3.left * moveForce);
-            body.position += Vector2.left * Time.deltaTime * moveForce;
+            body.AddForce(Vector3.left * moveForce);
         }
         else if (dir == 'r')
         {
             body.AddForce(Vector3.right * moveForce);
-            body.position += Vector2.right * Time.deltaTime * moveForce;
         }
     }
 
@@ -108,6 +106,7 @@ public class playerMovement : MonoBehaviour
         Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
         float distance = transform.position.z - mainCamera.transform.position.z;
         Vector3 pos = ray.GetPoint(distance);
+        pos = new Vector3(pos.x, pos.y, 0);
         if (currMode == 'r')
         {
             createRopeLink(pos);
@@ -148,10 +147,9 @@ public class playerMovement : MonoBehaviour
     private void fireShot(Vector3 pos)
     {
         Vector3 shotDirection = (pos - transform.position).normalized;
-        GameObject shot = manager.getShot();
+        GameObject shot = manager.getShot(true);
         shot.transform.position = transform.position + shotDirection;
         shot.transform.up = shotDirection;
-        shot.GetComponent<ShotScript>().playerShot = true;
     }
 
     public void slowTime(bool toStart)
@@ -188,6 +186,19 @@ public class playerMovement : MonoBehaviour
         //renderer.sprite = modeSuit;
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag == "EnemyShot")
+        {
+            takeHit();
+        }
+    }
+
+    private void takeHit()
+    {
+        animate.takeHit();
+        manager.loseHeart();
+    }
 
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -201,7 +212,12 @@ public class playerMovement : MonoBehaviour
             }
         }
 
-            if (collision.collider.tag == "Rope")
+        else if (collision.collider.tag == "Hazard")
+        {
+            takeHit();
+        }
+
+        else if (collision.collider.tag == "Rope")
         {
             if (currRope.Count > 0)
             {
@@ -235,10 +251,6 @@ public class playerMovement : MonoBehaviour
             //    body.AddForce(boost);
             //}
             
-        }
-        if (collision.collider.tag == "EnemyShot")
-        {
-            Debug.Log("take Hit");
         }
     }
 

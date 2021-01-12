@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
@@ -98,15 +99,17 @@ public class GameController : MonoBehaviour
         link.SetActive(false);
     }
 
-    public GameObject getShot()
+    public GameObject getShot(bool isPlayer)
     {
         GameObject shot = shotPool[currShotIdx];
+        shot.SetActive(true);
+        ShotScript shotScript = shot.GetComponent<ShotScript>();
         currShotIdx++;
         if (currShotIdx > shotPoolNum - 1)
         {
             currShotIdx = 0;
         }
-        shot.SetActive(true);
+        shotScript.setUpShot(isPlayer);
         return shot;
     }
 
@@ -147,11 +150,11 @@ public class GameController : MonoBehaviour
         setBoundaries();
     }
 
-    public void loseLife()
+    public void loseHeart()
     {
         if (currHearts == 0)
         {
-            /* game over*/
+            SceneManager.LoadScene(2);
         }
         else
         {

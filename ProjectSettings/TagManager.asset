@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Rope
   - Platform
+  - EnemyShot
+  - Shot
+  - Hazard
   layers:
   - Default
   - TransparentFX
