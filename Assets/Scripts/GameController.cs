@@ -8,6 +8,8 @@ public class GameController : MonoBehaviour
     Camera mainCamera;
     GameObject player;
     public Image sloMoSign;
+    public List<Image> hearts;
+    private int currHearts = 3;
     public GameObject obstaclePrefab;
     public GameObject boundaries; 
     private GameObject[] obstaclesPool;
@@ -17,6 +19,7 @@ public class GameController : MonoBehaviour
     private float minObstaclesGap;
     private float maxObstaclesGap;
     private float speed;
+
 
     // Link Object Pooling:
     public GameObject linkPrefab;
@@ -143,4 +146,18 @@ public class GameController : MonoBehaviour
         //SetObstacles();
         setBoundaries();
     }
+
+    public void loseLife()
+    {
+        if (currHearts == 0)
+        {
+            /* game over*/
+        }
+        else
+        {
+            hearts[currHearts - 1].enabled = false;
+            currHearts--;
+        }
+    }
+
 }
